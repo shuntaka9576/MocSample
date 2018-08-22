@@ -4,9 +4,9 @@ import (
 	"errors"
 	"flag"
 	"github.com/shuntaka9576/MocSample/converter"
-	_ "github.com/shuntaka9576/MocSample/imagetype/gif"
-	_ "github.com/shuntaka9576/MocSample/imagetype/jpg"
-	_ "github.com/shuntaka9576/MocSample/imagetype/png"
+	_ "github.com/shuntaka9576/MocSample/imagetypes/gif"
+	_ "github.com/shuntaka9576/MocSample/imagetypes/jpg"
+	_ "github.com/shuntaka9576/MocSample/imagetypes/png"
 	"io"
 )
 

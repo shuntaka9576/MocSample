@@ -1,14 +1,14 @@
 package gif
 
 import (
-	"github.com/shuntaka9576/MocSample/imagetype"
+	"github.com/shuntaka9576/MocSample/imagetypes"
 	"image"
 	"image/gif"
 	"io"
 )
 
 func init() {
-	imagetype.ResisterImageType("gif", &Gif{})
+	imagetypes.ResisterImageType("gif", &Gif{})
 }
 
 type Gif struct{}

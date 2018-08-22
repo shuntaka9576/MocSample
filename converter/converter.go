@@ -1,22 +1,22 @@
 package converter
 
 import (
-	"github.com/shuntaka9576/MocSample/imagetype"
+	"github.com/shuntaka9576/MocSample/imagetypes"
 	"os"
 )
 
 type Converter struct {
-	From, To imagetype.ImageType
+	From, To imagetypes.ImageType
 	Path     string
 }
 
 func GetConverter(from, to, path string) (converter Converter, err error) {
-	converter.From, err = imagetype.CheckSupportImageType(from)
+	converter.From, err = imagetypes.CheckSupportImageType(from)
 	if err != nil {
 		return converter, err
 	}
 
-	converter.To, err = imagetype.CheckSupportImageType(to)
+	converter.To, err = imagetypes.CheckSupportImageType(to)
 	if err != nil {
 		return converter, err
 	}
