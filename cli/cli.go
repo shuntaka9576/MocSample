@@ -3,6 +3,7 @@ package cli
 import (
 	"errors"
 	"flag"
+	"github.com/shuntaka9576/MocSample/converter"
 	_ "github.com/shuntaka9576/MocSample/imagetype/gif"
 	_ "github.com/shuntaka9576/MocSample/imagetype/jpg"
 	_ "github.com/shuntaka9576/MocSample/imagetype/png"
@@ -36,6 +37,12 @@ func (*Cli) Run(args []string) error {
 	default:
 		return errors.New("dir argument error occurred")
 	}
+	converter, err := converter.GetConverter(option.ToExt, option.FromExt, option.Dirpath)
+	if err != nil {
+		return err
+	}
+
+	converter.Convert("")
 
 	return nil
 }
