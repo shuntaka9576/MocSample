@@ -4,9 +4,9 @@ import (
 	"errors"
 	"flag"
 	_ "github.com/shuntaka9576/MocSample/converter/gif"
+	_ "github.com/shuntaka9576/MocSample/converter/jpg"
+	_ "github.com/shuntaka9576/MocSample/converter/png"
 	"io"
-	//_ "github.com/shuntaka9576/MocSample/converter/jpg"
-	//_ "github.com/shuntaka9576/MocSample/converter/png"
 )
 
 type Cli struct {

@@ -11,8 +11,7 @@ func init() {
 	converter.ResisterImageType("gif", &Gif{})
 }
 
-type Gif struct {
-}
+type Gif struct {}
 
 func (*Gif) Decode(r io.Reader) (image.Image, error) {
 	return gif.Decode(r)
