@@ -3,9 +3,9 @@ package cli
 import (
 	"errors"
 	"flag"
-	_ "github.com/shuntaka9576/MocSample/converter/gif"
-	_ "github.com/shuntaka9576/MocSample/converter/jpg"
-	_ "github.com/shuntaka9576/MocSample/converter/png"
+	_ "github.com/shuntaka9576/MocSample/imagetype/gif"
+	_ "github.com/shuntaka9576/MocSample/imagetype/jpg"
+	_ "github.com/shuntaka9576/MocSample/imagetype/png"
 	"io"
 )
 

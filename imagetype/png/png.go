@@ -1,14 +1,14 @@
 package png
 
 import (
-	"github.com/shuntaka9576/MocSample/converter"
+	"github.com/shuntaka9576/MocSample/imagetype"
 	"image"
 	"image/png"
 	"io"
 )
 
 func init() {
-	converter.ResisterImageType("jpg", &Png{})
+	imagetype.ResisterImageType("jpg", &Png{})
 }
 
 type Png struct{}

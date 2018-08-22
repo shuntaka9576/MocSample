@@ -1,17 +1,21 @@
 package converter
 
 import (
-	"image"
-	"io"
+	"github.com/shuntaka9576/MocSample/image"
 )
 
-type ImageType interface {
-	Decode(r io.Reader) (image.Image, error)
-	Encode(w io.Writer, m image.Image) error
+
+
+type Converter struct {
+	From, To image.ImageType
 }
 
-var supportImageTypes = map[string]ImageType{}
 
-func ResisterImageType(imageExt string, imageType ImageType) {
-	supportImageTypes[imageExt] = imageType
+
+func GetConverter(from, to, path string) {
+	var converter Converter
+	if val, ok := image.SupportImageTypes[from];
+		converter.From = val
+	}
+
 }
