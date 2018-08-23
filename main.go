@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/shuntaka9576/MocSample/cli"
 	"os"
-	"fmt"
 )
 
 const (
@@ -12,11 +11,7 @@ const (
 )
 
 func main() {
-	err := newApp().Run(os.Args)
-	if err != nil{
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(1)
-	}
+	os.Exit(newApp().Run(os.Args))
 }
 
 func newApp() *cli.Cli {

@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"github.com/shuntaka9576/MocSample/converter"
@@ -10,7 +9,9 @@ import (
 	_ "github.com/shuntaka9576/MocSample/imagetypes/png"
 	"io"
 	"io/ioutil"
+	"os"
 	"path/filepath"
+	"time"
 )
 
 type Cli struct {
@@ -18,47 +19,70 @@ type Cli struct {
 	Name, Version        string
 }
 
-type Option struct {
-	Dirpath, FromExt, ToExt string
-}
-
 func NewApp(in, out io.Writer) *Cli {
 	return &Cli{OutStream: in, ErrStream: out}
 }
 
-func (c *Cli) Run(args []string) error {
-	var option Option
-	flag.StringVar(&option.FromExt, "f", "png", "")
-	flag.StringVar(&option.ToExt, "t", "jpg", "")
+func (c *Cli) Run(args []string) int {
+	outdir, err := initDir()
+	if err != nil {
+		fmt.Fprintf(c.ErrStream, err.Error())
+		return 1
+	}
+
+	var fromExt, toExt, targetDir string
+	flag.StringVar(&fromExt, "f", "png", "")
+	flag.StringVar(&toExt, "t", "jpg", "")
 	flag.Parse()
 
 	switch {
 	case len(flag.Args()) == 0:
-		option.Dirpath = "."
+		targetDir = "."
 	case len(flag.Args()) == 1:
-		option.Dirpath = flag.Arg(0)
+		targetDir = flag.Arg(0)
 	default:
-		return errors.New("dir argument error occurred")
+		fmt.Fprintf(c.ErrStream, "dir argument error occurred\n")
+		return 1
 	}
-	fmt.Println(option.ToExt, option.FromExt, option.Dirpath)
 
-	convert, err := converter.GetConverter(option.ToExt, option.FromExt)
+	convert, err := converter.GetConverter(fromExt, toExt)
 	if err != nil {
-		return err
+		fmt.Fprintf(c.ErrStream, err.Error())
+		return 1
 	}
 
-	filepaths := dirwalk(option.Dirpath)
+	filepaths := dirwalk(targetDir)
 	for _, path := range filepaths {
 		path, err = filepath.Abs(path)
 		if err != nil {
-			return err
+			fmt.Fprintf(c.ErrStream, err.Error())
+			return 1
 		}
-		err := convert.Convert(path, ".")
-		if err != nil {
-			return err
+
+		var createdImageFileNames map[string]bool
+		if "."+fromExt == filepath.Ext(path) {
+			convertedImageName := filepath.Join(outdir, filepath.Base(path[:len(path)-len(filepath.Ext(path))]+"_c."+toExt))
+			if checkImageFileName(createdImageFileNames, convertedImageName, 0) {
+				err := convert.Convert(path, convertedImageName)
+			}
+			if err != nil {
+				fmt.Fprintf(c.ErrStream, err.Error())
+				return 1
+			}
 		}
 	}
-	return nil
+	return 0
+}
+
+func initDir() (string, error) {
+	outdir := "converted_" + time.Now().Format("20060102-150405")
+	if err := os.Mkdir(outdir, 0777); err != nil {
+	}
+	initialDir, err := filepath.Abs(outdir)
+	if err != nil {
+		return initialDir, err
+	}
+	return initialDir, nil
 }
 
 // Recursively directory search function
@@ -76,6 +100,17 @@ func dirwalk(dir string) []string {
 		}
 		paths = append(paths, filepath.Join(dir, file.Name()))
 	}
-
 	return paths
+}
+
+func checkImageFileName(createdImages map[string]bool, convertedImageName string, count int) bool {
+	switch count {
+	case 0:
+		_, ok := createdImages[convertedImageName]
+		if !ok {
+		}
+		return ok
+
+	}
+
 }
