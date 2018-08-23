@@ -52,6 +52,7 @@ func (c *Cli) Run(args []string) int {
 	}
 
 	filepaths := dirwalk(targetDir)
+	var createdImageFileNames map[string]bool
 	for _, path := range filepaths {
 		path, err = filepath.Abs(path)
 		if err != nil {
@@ -59,11 +60,11 @@ func (c *Cli) Run(args []string) int {
 			return 1
 		}
 
-		var createdImageFileNames map[string]bool
 		if "."+fromExt == filepath.Ext(path) {
-			convertedImageName := filepath.Join(outdir, filepath.Base(path[:len(path)-len(filepath.Ext(path))]+"_c."+toExt))
-			if checkImageFileName(createdImageFileNames, convertedImageName, 0) {
-				err := convert.Convert(path, convertedImageName)
+			convertedImageName := filepath.Base(path[:len(path)-len(filepath.Ext(path))] + "_c." + toExt)
+			createdImageFileNames, ok := checkImageFileName(createdImageFileNames, convertedImageName, 0)
+			if ok {
+				err = convert.Convert(path, filepath.Join(outdir, convertedImageName))
 			}
 			if err != nil {
 				fmt.Fprintf(c.ErrStream, err.Error())
@@ -103,14 +104,16 @@ func dirwalk(dir string) []string {
 	return paths
 }
 
-func checkImageFileName(createdImages map[string]bool, convertedImageName string, count int) bool {
+func checkImageFileName(createdImages map[string]bool, convertedImageName string, count int) (map[string]bool, bool) {
 	switch count {
 	case 0:
-		_, ok := createdImages[convertedImageName]
-		if !ok {
+		if _, ok := createdImages[convertedImageName]; ok {
+			count++
+			checkImageFileName(createdImages, "test", count)
 		}
-		return ok
-
+		createdImages[convertedImageName] = true
+		return createdImages, true
+	default:
+		return createdImages, true
 	}
-
 }
