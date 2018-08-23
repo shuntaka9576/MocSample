@@ -7,10 +7,9 @@ import (
 
 type Converter struct {
 	From, To imagetypes.ImageType
-	Path     string
 }
 
-func GetConverter(from, to, path string) (converter Converter, err error) {
+func GetConverter(from, to string) (converter Converter, err error) {
 	converter.From, err = imagetypes.CheckSupportImageType(from)
 	if err != nil {
 		return converter, err
@@ -20,14 +19,12 @@ func GetConverter(from, to, path string) (converter Converter, err error) {
 	if err != nil {
 		return converter, err
 	}
-	converter.Path = path
-
 	return converter, nil
 }
 
-func (c *Converter) Convert(outputPath string) error {
+func (c *Converter) Convert(inputImagePath, outputPath string) error {
 	// decode
-	file, err := os.Open(c.Path)
+	file, err := os.Open(inputImagePath)
 	if err != nil {
 		return err
 	}

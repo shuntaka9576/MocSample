@@ -9,6 +9,7 @@ import (
 
 func init() {
 	imagetypes.ResisterImageType("jpg", &Jpeg{})
+	imagetypes.ResisterImageType("jpeg", &Jpeg{})
 }
 
 type Jpeg struct{}

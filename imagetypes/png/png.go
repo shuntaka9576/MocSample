@@ -8,8 +8,7 @@ import (
 )
 
 func init() {
-	imagetypes.ResisterImageType("jpg", &Png{})
-	imagetypes.ResisterImageType("jpeg", &Png{})
+	imagetypes.ResisterImageType("png", &Png{})
 }
 
 type Png struct{}
