@@ -61,18 +61,19 @@ func (c *Cli) Run(args []string) int {
 			fmt.Fprintf(c.ErrStream, err.Error())
 			return 1
 		}
+		convertedImageName := filepath.Base(path[:len(path)-len(filepath.Ext(path))] + "_c." + toExt)
 
-		if "."+fromExt == filepath.Ext(path) {
-			convertedImageName := filepath.Base(path[:len(path)-len(filepath.Ext(path))] + "_c." + toExt)
-			convertedImageName = checkSameFileName(createdImageFileNames, convertedImageName, 0)
-			createdImageFileNames = append(createdImageFileNames, convertedImageName)
-			err = convert.Convert(path, filepath.Join(outdir, convertedImageName))
-			if err != nil {
-				fmt.Fprintf(c.ErrStream, err.Error())
-				return 1
-			}
-			fmt.Fprintf(c.OutStream, "%s -> %s\n", path, filepath.Join(outdir, convertedImageName))
+		// Duplication check
+		convertedImageName = checkSameFileName(createdImageFileNames, convertedImageName, 0)
+		createdImageFileNames = append(createdImageFileNames, convertedImageName)
+
+		// Convert image file
+		err = convert.Convert(path, filepath.Join(outdir, convertedImageName))
+		if err != nil {
+			fmt.Fprintf(c.ErrStream, err.Error())
+			return 1
 		}
+		fmt.Fprintf(c.OutStream, "%s -> %s\n", path, filepath.Join(outdir, convertedImageName))
 	}
 	return 0
 }

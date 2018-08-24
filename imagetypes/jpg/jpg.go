@@ -12,7 +12,9 @@ func init() {
 	imagetypes.ResisterImageType("jpeg", &Jpeg{})
 }
 
-type Jpeg struct{}
+type Jpeg struct{
+	ExtStrs []string
+}
 
 func (*Jpeg) Decode(r io.Reader) (image.Image, error) {
 	return jpeg.Decode(r)

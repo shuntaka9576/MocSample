@@ -9,6 +9,7 @@ import (
 type ImageType interface {
 	Decode(r io.Reader) (image.Image, error)
 	Encode(w io.Writer, m image.Image) error
+	CheckExtStr(ext string) bool
 }
 
 var supportImageTypes = map[string]ImageType{}

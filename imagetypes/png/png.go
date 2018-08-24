@@ -11,7 +11,9 @@ func init() {
 	imagetypes.ResisterImageType("png", &Png{})
 }
 
-type Png struct{}
+type Png struct{
+	ExtStrs []string
+}
 
 func (*Png) Decode(r io.Reader) (image.Image, error) {
 	return png.Decode(r)

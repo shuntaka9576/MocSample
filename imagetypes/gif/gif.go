@@ -11,7 +11,9 @@ func init() {
 	imagetypes.ResisterImageType("gif", &Gif{})
 }
 
-type Gif struct{}
+type Gif struct{
+	ExtStrs []string
+}
 
 func (*Gif) Decode(r io.Reader) (image.Image, error) {
 	return gif.Decode(r)
