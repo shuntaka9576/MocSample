@@ -15,7 +15,7 @@ func main() {
 }
 
 func newApp() *cli.Cli {
-	app := cli.NewApp(os.Stdin, os.Stderr)
+	app := cli.NewApp(os.Stdout, os.Stderr)
 	app.Version = Version
 	app.Name = Name
 	return app

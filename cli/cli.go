@@ -11,6 +11,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -52,7 +54,7 @@ func (c *Cli) Run(args []string) int {
 	}
 
 	filepaths := dirwalk(targetDir)
-	var createdImageFileNames map[string]bool
+	var createdImageFileNames []string
 	for _, path := range filepaths {
 		path, err = filepath.Abs(path)
 		if err != nil {
@@ -62,14 +64,14 @@ func (c *Cli) Run(args []string) int {
 
 		if "."+fromExt == filepath.Ext(path) {
 			convertedImageName := filepath.Base(path[:len(path)-len(filepath.Ext(path))] + "_c." + toExt)
-			createdImageFileNames, ok := checkImageFileName(createdImageFileNames, convertedImageName, 0)
-			if ok {
-				err = convert.Convert(path, filepath.Join(outdir, convertedImageName))
-			}
+			convertedImageName = checkSameFileName(createdImageFileNames, convertedImageName, 0)
+			createdImageFileNames = append(createdImageFileNames, convertedImageName)
+			err = convert.Convert(path, filepath.Join(outdir, convertedImageName))
 			if err != nil {
 				fmt.Fprintf(c.ErrStream, err.Error())
 				return 1
 			}
+			fmt.Fprintf(c.OutStream, "%s -> %s\n", path, filepath.Join(outdir, convertedImageName))
 		}
 	}
 	return 0
@@ -104,16 +106,14 @@ func dirwalk(dir string) []string {
 	return paths
 }
 
-func checkImageFileName(createdImages map[string]bool, convertedImageName string, count int) (map[string]bool, bool) {
-	switch count {
-	case 0:
-		if _, ok := createdImages[convertedImageName]; ok {
+// Returns file names that have never been created
+func checkSameFileName(createdImages []string, convertedImageName string, count int) string {
+	for _, imageName := range createdImages {
+		if imageName == convertedImageName {
 			count++
-			checkImageFileName(createdImages, "test", count)
+			convertedImageName = convertedImageName[:strings.LastIndex(convertedImageName, "c")+1] + strconv.Itoa(count) + filepath.Ext(convertedImageName)
+			convertedImageName = checkSameFileName(createdImages, convertedImageName, count)
 		}
-		createdImages[convertedImageName] = true
-		return createdImages, true
-	default:
-		return createdImages, true
 	}
+	return convertedImageName
 }
