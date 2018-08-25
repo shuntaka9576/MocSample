@@ -2,9 +2,9 @@ package cli_test
 
 import (
 	"bytes"
-	"testing"
-
 	"strings"
+	"testing"
+	"time"
 
 	"github.com/shuntaka9576/MocSample/cli"
 )
@@ -17,18 +17,22 @@ func TestCli_Run(t *testing.T) {
 		expected string
 	}{
 		//{"normal", []string{"imageConverter", "-version"}, fmt.Sprintf("imageConverter version %s", cli.Version)},
-		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "jpg", "."}, ""},
-		{"normal", "case", []string{"imageConverter", "-f", "jpg", "-t", "png", "."}, ""},
-		{"normal", "case", []string{"imageConverter", "-f", "jpg", "-t", "png", "./testdata"}, ""},
+		{"normal", "case", []string{"test", "-f", "png", "-t", "jpg", "/Users/takahashishunichi/go/src/github.com/shuntaka9576/MocSample/testdata"}, ""},
+		//{"normal", "case", []string{"", "-f", "png", "-t", "jpg", "."}, ""},
+		//{"normal", "case", []string{"-f", "jpg", "-t", "png", "."}, ""},
+		//{"normal", "case", []string{"-f", "jpg", "-t", "png", "../testdata"}, ""},
 	}
 
 	for _, tt := range tests {
 		outStream, errStream := new(bytes.Buffer), new(bytes.Buffer)
-		c := cli.NewApp(outStream, errStream)
+		c := &cli.Cli{OutStream: outStream, ErrStream: errStream}
 		if tt.pattern == "normal" {
 			if tt.pattern == "normal" {
 				t.Run(tt.name, func(t *testing.T) {
-					c.Run(tt.args)
+					err := c.Run(tt.args)
+					if err != 0 {
+						t.Error("Faild case")
+					}
 					if !strings.Contains(outStream.String(), tt.expected) {
 						t.Errorf("Output=%q, want %q", outStream.String(), tt.expected)
 					}
@@ -40,5 +44,6 @@ func TestCli_Run(t *testing.T) {
 				c.Run(tt.args)
 			})
 		}
+		time.Sleep(1 * time.Second)
 	}
 }
