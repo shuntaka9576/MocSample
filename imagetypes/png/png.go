@@ -8,11 +8,12 @@ import (
 )
 
 func init() {
-	imagetypes.ResisterImageType("png", &Png{})
+	init := &Png{[]string{".png"}}
+	imagetypes.ResisterImageType(init)
 }
 
 type Png struct{
-	ExtStrs []string
+	extStrs []string
 }
 
 func (*Png) Decode(r io.Reader) (image.Image, error) {
@@ -21,4 +22,14 @@ func (*Png) Decode(r io.Reader) (image.Image, error) {
 
 func (*Png) Encode(w io.Writer, m image.Image) error {
 	return png.Encode(w, m)
+}
+
+func (g *Png) CheckExtStr(checkExt string) bool {
+	for _, ext := range g.extStrs {
+		if ext == checkExt {
+			return true
+			break
+		}
+	}
+	return false
 }

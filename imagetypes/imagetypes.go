@@ -1,9 +1,9 @@
 package imagetypes
 
 import (
-	"errors"
 	"image"
 	"io"
+	"errors"
 )
 
 type ImageType interface {
@@ -12,16 +12,18 @@ type ImageType interface {
 	CheckExtStr(ext string) bool
 }
 
-var supportImageTypes = map[string]ImageType{}
+var supportImageTypes = []ImageType{}
 
-func ResisterImageType(imageExt string, imageType ImageType) {
-	supportImageTypes[imageExt] = imageType
+func ResisterImageType(imageType ImageType) {
+	supportImageTypes = append(supportImageTypes, imageType)
 }
 
-func CheckSupportImageType(extension string) (imagetype ImageType, err error) {
-	imagetype, ok := supportImageTypes[extension]
-	if !ok {
-		return imagetype, errors.New("not found option:" + extension)
+func GetSupportImageType(extension string) (imagetype ImageType, err error) {
+	for _, imagetype := range supportImageTypes {
+		if imagetype.CheckExtStr(extension){
+			return imagetype, nil
+			break
+		}
 	}
-	return imagetype, nil
+	return imagetype, errors.New("not found option: " + extension)
 }

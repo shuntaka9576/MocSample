@@ -8,12 +8,12 @@ import (
 )
 
 func init() {
-	imagetypes.ResisterImageType("jpg", &Jpeg{})
-	imagetypes.ResisterImageType("jpeg", &Jpeg{})
+	init := &Jpeg{[]string{".jpeg", ".jpg"}}
+	imagetypes.ResisterImageType(init)
 }
 
 type Jpeg struct{
-	ExtStrs []string
+	extStrs []string
 }
 
 func (*Jpeg) Decode(r io.Reader) (image.Image, error) {
@@ -22,4 +22,14 @@ func (*Jpeg) Decode(r io.Reader) (image.Image, error) {
 
 func (*Jpeg) Encode(w io.Writer, m image.Image) error {
 	return jpeg.Encode(w, m, nil)
+}
+
+func (g *Jpeg) CheckExtStr(checkExt string) bool {
+	for _, ext := range g.extStrs{
+		if ext == checkExt {
+			return true
+			break
+		}
+	}
+	return false
 }

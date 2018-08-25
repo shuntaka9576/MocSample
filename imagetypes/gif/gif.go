@@ -8,11 +8,12 @@ import (
 )
 
 func init() {
-	imagetypes.ResisterImageType("gif", &Gif{})
+	init := &Gif{[]string{".gif"}}
+	imagetypes.ResisterImageType(init)
 }
 
-type Gif struct{
-	ExtStrs []string
+type Gif struct {
+	extStrs []string
 }
 
 func (*Gif) Decode(r io.Reader) (image.Image, error) {
@@ -21,4 +22,14 @@ func (*Gif) Decode(r io.Reader) (image.Image, error) {
 
 func (*Gif) Encode(w io.Writer, m image.Image) error {
 	return gif.Encode(w, m, nil)
+}
+
+func (g *Gif) CheckExtStr(checkExt string) bool {
+	for _, ext := range g.extStrs {
+		if ext == checkExt {
+			return true
+			break
+		}
+	}
+	return false
 }

@@ -65,14 +65,17 @@ func (c *Cli) Run(args []string) int {
 
 		// Duplication check
 		convertedImageName = checkSameFileName(createdImageFileNames, convertedImageName, 0)
-		createdImageFileNames = append(createdImageFileNames, convertedImageName)
 
 		// Convert image file
-		err = convert.Convert(path, filepath.Join(outdir, convertedImageName))
+		outfilname, err := convert.Convert(path, filepath.Join(outdir, convertedImageName))
 		if err != nil {
 			fmt.Fprintf(c.ErrStream, err.Error())
 			return 1
 		}
+		if outfilname == "" {
+			continue
+		}
+		createdImageFileNames = append(createdImageFileNames, convertedImageName)
 		fmt.Fprintf(c.OutStream, "%s -> %s\n", path, filepath.Join(outdir, convertedImageName))
 	}
 	return 0
