@@ -3,16 +3,18 @@ package cli
 import (
 	"flag"
 	"fmt"
-	"github.com/shuntaka9576/MocSample/converter"
-	_ "github.com/shuntaka9576/MocSample/imagetypes/gif"
-	_ "github.com/shuntaka9576/MocSample/imagetypes/jpg"
-	_ "github.com/shuntaka9576/MocSample/imagetypes/png"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/shuntaka9576/MocSample/converter"
+	_ "github.com/shuntaka9576/MocSample/imagetypes/gif"
+	_ "github.com/shuntaka9576/MocSample/imagetypes/jpg"
+	_ "github.com/shuntaka9576/MocSample/imagetypes/png"
+
 	"time"
 )
 
@@ -76,7 +78,7 @@ func (c *Cli) Run(args []string) int {
 			continue
 		}
 		createdImageFileNames = append(createdImageFileNames, convertedImageName)
-		fmt.Fprintf(c.OutStream, "%s -> %s\n", path, filepath.Join(outdir, convertedImageName))
+		fmt.Fprintf(c.OutStream, "Convert Succeeded![%s -> %s]\n", path, filepath.Join(outdir, convertedImageName))
 	}
 	return 0
 }

@@ -1,10 +1,11 @@
 package converter
 
 import (
-	"github.com/shuntaka9576/MocSample/imagetypes"
 	"image"
 	"os"
 	"path/filepath"
+
+	"github.com/shuntaka9576/MocSample/imagetypes"
 )
 
 type Converter struct {
@@ -12,12 +13,12 @@ type Converter struct {
 }
 
 func GetConverter(from, to string) (converter Converter, err error) {
-	converter.From, err = imagetypes.GetSupportImageType("."+from)
+	converter.From, err = imagetypes.GetSupportImageType("." + from)
 	if err != nil {
 		return converter, err
 	}
 
-	converter.To, err = imagetypes.GetSupportImageType("."+to)
+	converter.To, err = imagetypes.GetSupportImageType("." + to)
 	if err != nil {
 		return converter, err
 	}

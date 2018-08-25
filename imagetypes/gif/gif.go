@@ -1,10 +1,11 @@
 package gif
 
 import (
-	"github.com/shuntaka9576/MocSample/imagetypes"
 	"image"
 	"image/gif"
 	"io"
+
+	"github.com/shuntaka9576/MocSample/imagetypes"
 )
 
 func init() {

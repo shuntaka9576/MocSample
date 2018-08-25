@@ -1,10 +1,11 @@
 package jpg
 
 import (
-	"github.com/shuntaka9576/MocSample/imagetypes"
 	"image"
 	"image/jpeg"
 	"io"
+
+	"github.com/shuntaka9576/MocSample/imagetypes"
 )
 
 func init() {
@@ -12,7 +13,7 @@ func init() {
 	imagetypes.ResisterImageType(init)
 }
 
-type Jpeg struct{
+type Jpeg struct {
 	extStrs []string
 }
 
@@ -25,7 +26,7 @@ func (*Jpeg) Encode(w io.Writer, m image.Image) error {
 }
 
 func (g *Jpeg) CheckExtStr(checkExt string) bool {
-	for _, ext := range g.extStrs{
+	for _, ext := range g.extStrs {
 		if ext == checkExt {
 			return true
 			break

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/shuntaka9576/MocSample/cli"
 	"os"
+
+	"github.com/shuntaka9576/MocSample/cli"
 )
 
 const (

@@ -1,9 +1,9 @@
 package imagetypes
 
 import (
+	"errors"
 	"image"
 	"io"
-	"errors"
 )
 
 type ImageType interface {
@@ -20,7 +20,7 @@ func ResisterImageType(imageType ImageType) {
 
 func GetSupportImageType(extension string) (imagetype ImageType, err error) {
 	for _, imagetype := range supportImageTypes {
-		if imagetype.CheckExtStr(extension){
+		if imagetype.CheckExtStr(extension) {
 			return imagetype, nil
 			break
 		}

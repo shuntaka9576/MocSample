@@ -1,10 +1,11 @@
 package png
 
 import (
-	"github.com/shuntaka9576/MocSample/imagetypes"
 	"image"
 	"image/png"
 	"io"
+
+	"github.com/shuntaka9576/MocSample/imagetypes"
 )
 
 func init() {
@@ -12,7 +13,7 @@ func init() {
 	imagetypes.ResisterImageType(init)
 }
 
-type Png struct{
+type Png struct {
 	extStrs []string
 }
 
