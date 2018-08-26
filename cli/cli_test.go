@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"fmt"
 	"github.com/shuntaka9576/MocSample/cli"
 )
 
@@ -16,11 +17,25 @@ func TestCli_Run(t *testing.T) {
 		args     []string
 		expected string
 	}{
-		//{"normal", []string{"imageConverter", "-version"}, fmt.Sprintf("imageConverter version %s", cli.Version)},
-		{"normal", "case", []string{"test", "-f", "png", "-t", "jpg", "../testdata"}, ""},
-		//{"normal", "case", []string{"", "-f", "png", "-t", "jpg", "."}, ""},
-		//{"normal", "case", []string{"-f", "jpg", "-t", "png", "."}, ""},
-		//{"normal", "case", []string{"-f", "jpg", "-t", "png", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "png", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "jpg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "jpeg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "gif", "../testdata"}, ""},
+
+		{"normal", "case", []string{"imageConverter", "-f", "jpg", "-t", "jpg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "jpg", "-t", "png", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "jpg", "-t", "jpeg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "jpg", "-t", "gif", "../testdata"}, ""},
+
+		{"normal", "case", []string{"imageConverter", "-f", "jpeg", "-t", "jpeg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "jpeg", "-t", "png", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "jpeg", "-t", "jpg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "jpeg", "-t", "gif", "../testdata"}, ""},
+
+		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "gif", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "png", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "jpg", "../testdata"}, ""},
+		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "jpeg", "../testdata"}, ""},
 	}
 
 	for _, tt := range tests {
@@ -30,6 +45,7 @@ func TestCli_Run(t *testing.T) {
 			if tt.pattern == "normal" {
 				t.Run(tt.name, func(t *testing.T) {
 					err := c.Run(tt.args)
+					fmt.Println(c.OutStream)
 					if err != 0 {
 						t.Error("Faild case")
 					}
