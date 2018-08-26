@@ -39,7 +39,7 @@ func (c *Cli) Run(args []string) int {
 	}
 
 	var fromExt, toExt, targetDir string
-	flags := flag.NewFlagSet("imgConverter", flag.ContinueOnError)
+	flags := flag.NewFlagSet(c.Name, flag.ContinueOnError)
 	flags.SetOutput(c.ErrStream)
 	flags.StringVar(&fromExt, "f", "png", "")
 	flags.StringVar(&toExt, "t", "jpg", "")

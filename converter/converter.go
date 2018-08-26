@@ -25,6 +25,7 @@ func GetConverter(from, to string) (converter Converter, err error) {
 	return converter, nil
 }
 
+// If conversion failed, return empty string.
 func (c *Converter) Convert(inputImagePath, outputPath string) (string, error) {
 	// decode
 	var decodeImage image.Image

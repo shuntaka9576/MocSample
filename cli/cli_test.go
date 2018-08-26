@@ -8,6 +8,7 @@ import (
 
 	"fmt"
 	"github.com/shuntaka9576/MocSample/cli"
+	"os"
 )
 
 func TestCli_Run(t *testing.T) {
@@ -18,6 +19,7 @@ func TestCli_Run(t *testing.T) {
 		args     []string
 		expected string
 	}{
+		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "png"}, ""},
 		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "png", "../testdata"}, ""},
 		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "jpg", "../testdata"}, ""},
 		{"normal", "case", []string{"imageConverter", "-f", "png", "-t", "jpeg", "../testdata"}, ""},
@@ -37,6 +39,13 @@ func TestCli_Run(t *testing.T) {
 		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "png", "../testdata"}, ""},
 		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "jpg", "../testdata"}, ""},
 		{"normal", "case", []string{"imageConverter", "-f", "gif", "-t", "jpeg", "../testdata"}, ""},
+
+		{"no-normal", "case", []string{"imageConverter", "-f", "gif", "-", "gif", "../testdata"}, ""},
+		{"no-normal", "case", []string{"imageConverter", "-", "gif", "-t", "png", "../testdata"}, ""},
+		{"no-normal", "case", []string{"imageConverter", "-f", "gif", "t", "jpg", "../testdata"}, ""},
+		{"no-normal", "case", []string{"imageConverter", "-", "gif", "-t", "jpeg", "../testdata"}, ""},
+
+		{"no-normal", "dir name fail", []string{"imageConverter", "-f", "gif", "t", "jpg", "../a"}, ""},
 	}
 
 	for _, tt := range tests {
@@ -58,10 +67,18 @@ func TestCli_Run(t *testing.T) {
 		}
 		if tt.pattern == "non-normal" {
 			t.Run(tt.name, func(t *testing.T) {
-				c.Run(tt.args)
+				err := c.Run(tt.args)
+				if err == 0 {
+					t.Error("Faild case")
+				}
 			})
 		}
-		time.Sleep(1 * time.Second)
+		time.Sleep(1 * time.Millisecond)
 	}
 }
 
+func TestNewApp(t *testing.T) {
+	// TODO
+	app := cli.NewApp(os.Stdin, os.Stdout)
+	app.Name = "test"
+}

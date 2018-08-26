@@ -51,3 +51,41 @@ func TestGetConverter(t *testing.T) {
 		}
 	}
 }
+
+func TestConverter_Convert(t *testing.T) {
+	t.Helper()
+	type input struct {
+		from, to, input, output string
+	}
+	tests := []struct {
+		pattern string
+		name    string
+		input   input
+		want    string
+	}{
+		{"normal", "convert to jpg from gif", input{"gif", "jpg", "../testdata/1/sample1.gif", "test.jpg"}, ""},
+		{"normal", "input path fail", input{"gif", "jpg", "../testdata/1/", "./test.jpg"}, ""},
+		{"non-normal", "not found ext file", input{"gif", "jpg", "../testdata/1/s.gif", "./test.jpg"}, ""},
+		{"non-normal", "convert to jpg from gif", input{"gif", "jpg", "../testdata/1/sample1.gif", "/te"}, ""},
+	}
+	for _, tt := range tests {
+		if tt.pattern == "normal" {
+			t.Run(tt.name, func(t *testing.T) {
+				con, _ := converter.GetConverter(tt.input.from, tt.input.to)
+				_, err := con.Convert(tt.input.input, tt.input.output)
+				if err != nil {
+					t.Errorf("but got %v", err.Error())
+				}
+			})
+		}
+		if tt.pattern == "non-normal" {
+			t.Run(tt.name, func(t *testing.T) {
+				con, _ := converter.GetConverter(tt.input.from, tt.input.to)
+				_, err := con.Convert(tt.input.input, tt.input.output)
+				if err == nil {
+					t.Error("Test Fail")
+				}
+			})
+		}
+	}
+}
