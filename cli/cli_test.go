@@ -17,7 +17,7 @@ func TestCli_Run(t *testing.T) {
 		expected string
 	}{
 		//{"normal", []string{"imageConverter", "-version"}, fmt.Sprintf("imageConverter version %s", cli.Version)},
-		{"normal", "case", []string{"test", "-f", "png", "-t", "jpg", "/Users/takahashishunichi/go/src/github.com/shuntaka9576/MocSample/testdata"}, ""},
+		{"normal", "case", []string{"test", "-f", "png", "-t", "jpg", "../testdata"}, ""},
 		//{"normal", "case", []string{"", "-f", "png", "-t", "jpg", "."}, ""},
 		//{"normal", "case", []string{"-f", "jpg", "-t", "png", "."}, ""},
 		//{"normal", "case", []string{"-f", "jpg", "-t", "png", "../testdata"}, ""},
@@ -47,3 +47,4 @@ func TestCli_Run(t *testing.T) {
 		time.Sleep(1 * time.Second)
 	}
 }
+func TestNewApp(t *testing.T) {}

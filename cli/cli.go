@@ -9,14 +9,15 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/shuntaka9576/MocSample/converter"
 	_ "github.com/shuntaka9576/MocSample/imagetypes/gif"
 	_ "github.com/shuntaka9576/MocSample/imagetypes/jpg"
 	_ "github.com/shuntaka9576/MocSample/imagetypes/png"
-
-	"time"
 )
+
+// TODO add user definition variables
 
 type Cli struct {
 	OutStream, ErrStream io.Writer
@@ -35,15 +36,22 @@ func (c *Cli) Run(args []string) int {
 	}
 
 	var fromExt, toExt, targetDir string
-	flag.StringVar(&fromExt, "f", "png", "")
-	flag.StringVar(&toExt, "t", "jpg", "")
-	flag.Parse()
+	flags := flag.NewFlagSet("imgConverter", flag.ContinueOnError)
+	flags.SetOutput(c.ErrStream)
+	flags.StringVar(&fromExt, "f", "png", "")
+	flags.StringVar(&toExt, "t", "jpg", "")
 
+	if err := flags.Parse(args[1:]); err != nil {
+		fmt.Fprintf(c.ErrStream, err.Error())
+		return 1
+	}
+
+	nonflagArgs := flags.Args()
 	switch {
-	case len(flag.Args()) == 0:
+	case len(nonflagArgs) <= 0:
 		targetDir = "."
-	case len(flag.Args()) == 1:
-		targetDir = flag.Arg(0)
+	case len(nonflagArgs) == 1:
+		targetDir = nonflagArgs[0]
 	default:
 		fmt.Fprintf(c.ErrStream, "dir argument error occurred\n")
 		return 1
