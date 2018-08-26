@@ -17,7 +17,10 @@ import (
 	_ "github.com/shuntaka9576/MocSample/imagetypes/png"
 )
 
-// TODO add user definition variables
+const (
+	ExitCodeOK = iota
+	ExitCodeError
+)
 
 type Cli struct {
 	OutStream, ErrStream io.Writer
@@ -32,7 +35,7 @@ func (c *Cli) Run(args []string) int {
 	outdir, err := initDir()
 	if err != nil {
 		fmt.Fprintf(c.ErrStream, err.Error())
-		return 1
+		return ExitCodeError
 	}
 
 	var fromExt, toExt, targetDir string
@@ -43,7 +46,7 @@ func (c *Cli) Run(args []string) int {
 
 	if err := flags.Parse(args[1:]); err != nil {
 		fmt.Fprintf(c.ErrStream, err.Error())
-		return 1
+		return ExitCodeError
 	}
 
 	nonflagArgs := flags.Args()
@@ -54,13 +57,13 @@ func (c *Cli) Run(args []string) int {
 		targetDir = nonflagArgs[0]
 	default:
 		fmt.Fprintf(c.ErrStream, "dir argument error occurred\n")
-		return 1
+		return ExitCodeError
 	}
 
 	convert, err := converter.GetConverter(fromExt, toExt)
 	if err != nil {
 		fmt.Fprintf(c.ErrStream, err.Error())
-		return 1
+		return ExitCodeError
 	}
 
 	filepaths := dirwalk(targetDir)
@@ -69,7 +72,7 @@ func (c *Cli) Run(args []string) int {
 		path, err = filepath.Abs(path)
 		if err != nil {
 			fmt.Fprintf(c.ErrStream, err.Error())
-			return 1
+			return ExitCodeError
 		}
 		convertedImageName := filepath.Base(path[:len(path)-len(filepath.Ext(path))] + "_c." + toExt)
 
@@ -80,7 +83,7 @@ func (c *Cli) Run(args []string) int {
 		outfilname, err := convert.Convert(path, filepath.Join(outdir, convertedImageName))
 		if err != nil {
 			fmt.Fprintf(c.ErrStream, err.Error())
-			return 1
+			return ExitCodeError
 		}
 		if outfilname == "" {
 			continue
@@ -88,7 +91,7 @@ func (c *Cli) Run(args []string) int {
 		createdImageFileNames = append(createdImageFileNames, convertedImageName)
 		fmt.Fprintf(c.OutStream, "Convert Succeeded![%s -> %s]\n", path, filepath.Join(outdir, convertedImageName))
 	}
-	return 0
+	return ExitCodeOK
 }
 
 func initDir() (string, error) {
