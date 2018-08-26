@@ -11,6 +11,7 @@ import (
 )
 
 func TestCli_Run(t *testing.T) {
+	t.Helper()
 	var tests = []struct {
 		pattern  string
 		name     string
@@ -63,4 +64,4 @@ func TestCli_Run(t *testing.T) {
 		time.Sleep(1 * time.Second)
 	}
 }
-func TestNewApp(t *testing.T) {}
+
