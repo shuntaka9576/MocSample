@@ -39,10 +39,12 @@ func (c *Cli) Run(args []string) int {
 	}
 
 	var fromExt, toExt, targetDir string
+	var version bool
 	flags := flag.NewFlagSet(c.Name, flag.ContinueOnError)
 	flags.SetOutput(c.ErrStream)
 	flags.StringVar(&fromExt, "f", "png", "")
 	flags.StringVar(&toExt, "t", "jpg", "")
+	flags.BoolVar(&version, "version", false, "")
 
 	if err := flags.Parse(args[1:]); err != nil {
 		fmt.Fprintf(c.ErrStream, err.Error())
@@ -57,6 +59,11 @@ func (c *Cli) Run(args []string) int {
 		targetDir = nonflagArgs[0]
 	default:
 		fmt.Fprintf(c.ErrStream, "dir argument error occurred\n")
+		return ExitCodeError
+	}
+
+	if version {
+		fmt.Fprintf(c.OutStream, "%v version %v", c.Name, c.Version)
 		return ExitCodeError
 	}
 
